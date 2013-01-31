@@ -290,7 +290,7 @@ func buildParser() parser.Parser {
 			parser.All(parser.Symbol("="), parser.Lexeme(integer())),
 			nilParser(),
 		),
-		parser.Any(parser.Symbol(","), parser.Symbol("")),
+		parser.Any(parser.Symbol(","), parser.Symbol(";"), parser.Symbol("")),
 	)
 	enumDef := parser.Collect(
 		parser.Identifier(),
@@ -310,7 +310,9 @@ func buildParser() parser.Parser {
 					parser.Try(float()), integer()))),
 			nilParser(),
 		),
-		parser.Skip(parser.Many(parser.Symbol(","))),
+		parser.Skip(
+			parser.Any(parser.Symbol(","), parser.Symbol(";"), parser.Symbol("")),
+		),
 	)
 	structDef := parser.Collect(
 		parser.Identifier(),
