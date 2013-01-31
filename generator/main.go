@@ -12,8 +12,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/samuel/go-thrift"
-	"github.com/samuel/go-thrift/parser"
+	"github.com/tchajed/go-thrift"
+	"github.com/tchajed/go-thrift/parser"
 )
 
 func camelCase(st string) string {
@@ -65,7 +65,7 @@ func main() {
 	out := os.Stdout
 	if outfilename != "-" {
 		var err error
-		out, err = os.OpenFile(outfilename, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0644)
+		out, err = os.OpenFile(outfilename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%s\n", err.Error())
 			os.Exit(2)
