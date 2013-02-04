@@ -35,7 +35,8 @@ func (e ErrUnknownType) Error() string {
 }
 
 type GoGenerator struct {
-	Thrift *parser.Thrift
+	Thrift      *parser.Thrift
+	ImportsUsed map[string]bool
 }
 
 func (g *GoGenerator) error(err error) {
@@ -203,6 +204,9 @@ func (e *%s) UnmarshalJSON(b []byte) error {
 }
 `, enumName, enumName, enumName, enumName)
 
+	g.ImportsUsed["fmt"] = true
+	g.ImportsUsed["strconv"] = true
+
 	return nil
 }
 
@@ -236,6 +240,7 @@ func (g *GoGenerator) writeException(out io.Writer, ex *parser.Struct) error {
 		g.write(out, "\treturn fmt.Sprintf(\"%s{%s}\", %s)\n",
 			exName, strings.Join(fieldNames, ", "), strings.Join(fieldVars, ", "))
 	}
+	g.ImportsUsed["fmt"] = true
 	return g.write(out, "}\n")
 }
 
@@ -382,12 +387,8 @@ func (g *GoGenerator) Generate(name string, out io.Writer) (err error) {
 	g.write(out, "\npackage %s\n", packageName)
 
 	// Imports
-	imports := []string{"fmt"}
-	if len(g.Thrift.Enums) > 0 {
-		imports = append(imports, "strconv")
-	}
 	g.write(out, "\nimport (\n")
-	for _, in := range imports {
+	for in := range g.ImportsUsed {
 		g.write(out, "\t\"%s\"\n", in)
 	}
 	g.write(out, ")\n")

@@ -86,7 +86,7 @@ func main() {
 	fp := strings.Split(filename, "/")
 	name := strings.Split(fp[len(fp)-1], ".")[0]
 
-	generator := &GoGenerator{th.MergeIncludes()}
+	generator := &GoGenerator{th.MergeIncludes(), make(map[string]bool)}
 	err = generator.Generate(name, out)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err.Error())
