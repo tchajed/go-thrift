@@ -387,13 +387,11 @@ func (g *GoGenerator) Generate(name string, out io.Writer) (err error) {
 	g.write(out, "\npackage %s\n", packageName)
 
 	// Imports
-	if len(g.ImportsUsed) > 0 {
-		g.write(out, "\nimport (\n")
-		for in := range g.ImportsUsed {
-			g.write(out, "\t\"%s\"\n", in)
-		}
-		g.write(out, ")\n")
+	g.write(out, "\nimport (\n")
+	for in := range g.ImportsUsed {
+		g.write(out, "\t\"%s\"\n", in)
 	}
+	g.write(out, ")\n")
 
 	//
 
